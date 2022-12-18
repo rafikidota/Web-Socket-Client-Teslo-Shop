@@ -1,5 +1,6 @@
 import { Manager, Socket } from "socket.io-client"
 
+let socket: Socket;
 interface MessageFromServer {
     fullName: string,
     message: string
@@ -11,11 +12,12 @@ export const connectToServer = (jwt: string) => {
             auth: jwt
         }
     });
-    const socket = manager.socket('/');
-    addListeners(socket);
+    socket?.removeAllListeners();
+    socket = manager.socket('/');
+    addListeners();
 }
 
-const addListeners = (socket: Socket) => {
+const addListeners = () => {
     const serverStatusLabel = document.querySelector<HTMLSpanElement>('#server-status');
     const clientsUl = document.querySelector<HTMLUListElement>('#clients-ul');
     const messageForm = document.querySelector<HTMLFormElement>('#message-form');
